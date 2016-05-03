@@ -3,10 +3,16 @@ class LinksController < ApplicationController
 
   def reroute
     link = Link.find_by(short_url: params[:wildcard])
+    Request.create(
+      user_agent: request.headers["User-Agent"],
+      accept_language: request.headers["Accept-Language"],
+      path: request.path,
+      link: link
+      )
     if link
       redirect_to link.full_url
     else
-      redirect_to link, notice: "That doesn't point to anything"
+      render plain: "404 Not Found", status: 404
     end
   end
 
