@@ -7,6 +7,7 @@
     <tr>
       <th>Full url</th>
       <th>Short url</th>
+      <th>Click count</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= link.full_url %></td>
         <td><%= link.short_url %></td>
+        <td><%= link.click_count %></td>
         <td><%= link_to 'Show', link %></td>
         <td><%= link_to 'Edit', edit_link_path(link) %></td>
         <td><%= link_to 'Destroy', link, method: :delete, data: { confirm: 'Are you sure?' } %></td>
