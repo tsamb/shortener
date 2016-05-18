@@ -1,5 +1,6 @@
 class LinksController < ApplicationController
   before_action :set_link, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, except: :reroute
 
   def reroute
     link = Link.find_by(short_url: params[:wildcard])
@@ -85,9 +86,5 @@ class LinksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def link_params
       params.require(:link).permit(:full_url, :short_url)
-    end
-
-    def require_login
-      redirect_to :login_path unless logged_in?
     end
 end

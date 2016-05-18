@@ -13,6 +13,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    redirect_to login_path, notice: 'You must login to do that.' unless logged_in?
+    redirect_to login_path, notice: 'Please log in.' unless logged_in?
   end
 end
