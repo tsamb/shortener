@@ -17,11 +17,15 @@ ActiveRecord::Schema.define(version: 20160503205939) do
   enable_extension "plpgsql"
 
   create_table "links", force: :cascade do |t|
-    t.text     "full_url"
-    t.string   "short_url"
+    t.text     "full_url",   null: false
+    t.string   "short_url",  null: false
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_index "links", ["short_url"], name: "index_links_on_short_url", using: :btree
+  add_index "links", ["user_id"], name: "index_links_on_user_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
     t.string   "user_agent"
@@ -34,5 +38,15 @@ ActiveRecord::Schema.define(version: 20160503205939) do
 
   add_index "requests", ["link_id"], name: "index_requests_on_link_id", using: :btree
 
+  create_table "users", force: :cascade do |t|
+    t.string   "username",        null: false
+    t.string   "password_digest", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "users", ["username"], name: "index_users_on_username", using: :btree
+
+  add_foreign_key "links", "users"
   add_foreign_key "requests", "links"
 end

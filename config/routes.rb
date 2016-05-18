@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   resources :links
-
   root 'links#index'
+
+
+  resources :sessions, only: [:new, :create, :destroy]
+  # match '/signup',  to: 'users#new',            via: 'get'
+  match '/login',  to: 'sessions#new',         via: 'get'
+  match '/logout', to: 'sessions#destroy',     via: ['get','delete']
 
   get ':wildcard' => 'links#reroute'
 
