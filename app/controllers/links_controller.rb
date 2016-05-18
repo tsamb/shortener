@@ -20,12 +20,13 @@ class LinksController < ApplicationController
   # GET /links
   # GET /links.json
   def index
-    @links = Link.all
+    @links = current_user.links
   end
 
   # GET /links/1
   # GET /links/1.json
   def show
+    render plain: "403 Unauthorized", status: 403 unless @link.user == current_user
   end
 
   # GET /links/new
@@ -35,6 +36,7 @@ class LinksController < ApplicationController
 
   # GET /links/1/edit
   def edit
+    render plain: "403 Unauthorized", status: 403 unless @link.user == current_user
   end
 
   # POST /links
@@ -85,6 +87,6 @@ class LinksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def link_params
-      params.require(:link).permit(:full_url, :short_url)
+      params.require(:link).permit(:full_url, :short_url).merge(user: current_user)
     end
 end
