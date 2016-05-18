@@ -86,4 +86,8 @@ class LinksController < ApplicationController
     def link_params
       params.require(:link).permit(:full_url, :short_url)
     end
+
+    def require_login
+      redirect_to :login_path unless logged_in?
+    end
 end
