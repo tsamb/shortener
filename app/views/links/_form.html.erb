@@ -13,11 +13,11 @@
 
   <div class="field">
     <%= f.label :full_url %><br>
-    <%= f.text_area :full_url %>
+    <%= f.text_field :full_url, value: "http://" %>
   </div>
   <div class="field">
     <%= f.label :short_url %><br>
-    <%= f.text_field :short_url %>
+    <%= request.scheme %>://<%= request.host %>/<%= f.text_field :short_url %>
   </div>
   <div class="actions">
     <%= f.submit %>
