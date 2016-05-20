@@ -17,3 +17,18 @@
 
 <%= link_to 'Edit', edit_link_path(@link) %> |
 <%= link_to 'Back', links_path %>
+
+<h2>User Agents</h2>
+
+<table>
+	<tr>
+		<th>User agent string</th>
+    <th>Count</th>
+	</tr>
+  <% @link.user_agent_frequency.each do |user_agent, count| %>
+    <tr>
+      <td><%= user_agent %></td>
+      <td><%= count %></td>
+    </tr>
+  <% end %>
+</table>

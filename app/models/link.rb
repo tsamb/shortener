@@ -5,4 +5,8 @@ class Link < ActiveRecord::Base
   def click_count
     requests.count
   end
+
+  def user_agent_frequency
+    requests.group("requests.user_agent").count
+  end
 end
