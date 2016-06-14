@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe LinksController, type: :controller do
-  let(:dummy_user) {User.create!(username: 'sam', password: 'password')}
+  let(:dummy_user) { User.create!(username: 'sam', password: 'password') }
   let(:valid_session) { {user_id: dummy_user.id} }
+  let(:hacker_user) { User.create!(username: 'hacker', password: 'password') }
+  let(:hacker_session) { {user_id: hacker_user.id} }
   let(:valid_attributes) {{full_url: "http://www.google.com", short_url: "thegoog", user: dummy_user}}
   let(:unowned_attributes) {{full_url: "http://www.linkedin.com", short_url: "li"}}
   let(:invalid_attributes) {{full_url: "not-a-url", short_url: ""}}
@@ -62,10 +64,27 @@ RSpec.describe LinksController, type: :controller do
 
   describe "GET #show" do
     context "when logged in" do
-      it "assigns the requested link as @link" do
-        link = Link.create! valid_attributes
-        get :show, {:id => link.to_param}, valid_session
-        expect(assigns(:link)).to eq(link)
+      context "as the owner" do
+        it "assigns the requested link as @link" do
+          link = Link.create! valid_attributes
+          get :show, {:id => link.to_param}, valid_session
+          expect(assigns(:link)).to eq(link)
+        end
+
+        it "renders the show template" do
+          link = Link.create! valid_attributes
+          get :show, {:id => link.to_param}, valid_session
+          expect(response).to render_template("show")
+        end
+      end
+
+      context "as a non-owner" do
+        it "responds with a 403" do
+          link = Link.create! valid_attributes
+          get :show, {:id => link.to_param}, hacker_session
+          expect(response.status).to eq(403)
+          expect(response.body).to eq("403 Unauthorized")
+        end
       end
     end
 
