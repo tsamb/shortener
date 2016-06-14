@@ -28,4 +28,20 @@ RSpec.describe Link, type: :model do
       expect(link_no_short_url).to be_invalid
     end
   end
+
+  describe "#click_count" do
+    it "returns the count of requests via this link" do
+      3.times { link.requests.create!(user_agent: "Mozilla/5.0", accept_language: "en-US", path: "/thegoog") }
+      expect(link.click_count).to eq(3)
+    end
+  end
+
+  describe "#user_agent_frequency" do
+    it "returns a frequency hash of user agent counts" do
+      2.times { link.requests.create!(user_agent: "Mozilla/5.0", accept_language: "en-US", path: "/thegoog") }
+      3.times { link.requests.create!(user_agent: "NCSA Mosaic/1.0", accept_language: "en-US", path: "/thegoog") }
+      link.requests.create!(user_agent: "Opera/5.11", accept_language: "en-US", path: "/thegoog")
+      expect(link.user_agent_frequency).to eq({"Mozilla/5.0" => 2, "NCSA Mosaic/1.0" => 3, "Opera/5.11" => 1})
+    end
+  end
 end
