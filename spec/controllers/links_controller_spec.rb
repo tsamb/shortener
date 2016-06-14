@@ -194,39 +194,49 @@ RSpec.describe LinksController, type: :controller do
     let(:new_attributes) {{short_url: "google-home"}}
 
     context "when logged in" do
-      context "with valid params" do
+      context "as an owner" do
+        context "with valid params" do
+          it "updates the requested link" do
+            link = Link.create! valid_attributes
+            put :update, {:id => link.to_param, :link => new_attributes}, valid_session
+            link.reload
+            expect(link.short_url).to eq("google-home")
+          end
 
-        it "updates the requested link" do
-          link = Link.create! valid_attributes
-          put :update, {:id => link.to_param, :link => new_attributes}, valid_session
-          link.reload
-          expect(link.short_url).to eq("google-home")
+          it "assigns the requested link as @link" do
+            link = Link.create! valid_attributes
+            put :update, {:id => link.to_param, :link => valid_attributes}, valid_session
+            expect(assigns(:link)).to eq(link)
+          end
+
+          it "redirects to the link" do
+            link = Link.create! valid_attributes
+            put :update, {:id => link.to_param, :link => valid_attributes}, valid_session
+            expect(response).to redirect_to(link)
+          end
         end
 
-        it "assigns the requested link as @link" do
-          link = Link.create! valid_attributes
-          put :update, {:id => link.to_param, :link => valid_attributes}, valid_session
-          expect(assigns(:link)).to eq(link)
-        end
+        context "with invalid params" do
+          it "assigns the link as @link" do
+            link = Link.create! valid_attributes
+            put :update, {:id => link.to_param, :link => invalid_attributes}, valid_session
+            expect(assigns(:link)).to eq(link)
+          end
 
-        it "redirects to the link" do
-          link = Link.create! valid_attributes
-          put :update, {:id => link.to_param, :link => valid_attributes}, valid_session
-          expect(response).to redirect_to(link)
+          it "re-renders the 'edit' template" do
+            link = Link.create! valid_attributes
+            put :update, {:id => link.to_param, :link => invalid_attributes}, valid_session
+            expect(response).to render_template("edit")
+          end
         end
       end
 
-      context "with invalid params" do
-        it "assigns the link as @link" do
+      context "as a non-owner" do
+        it "responds with a 403" do
           link = Link.create! valid_attributes
-          put :update, {:id => link.to_param, :link => invalid_attributes}, valid_session
-          expect(assigns(:link)).to eq(link)
-        end
-
-        it "re-renders the 'edit' template" do
-          link = Link.create! valid_attributes
-          put :update, {:id => link.to_param, :link => invalid_attributes}, valid_session
-          expect(response).to render_template("edit")
+          put :update, {:id => link.to_param, :link => new_attributes}, hacker_session
+          expect(response.status).to eq(403)
+          expect(response.body).to eq("403 Unauthorized")
         end
       end
     end
@@ -253,6 +263,15 @@ RSpec.describe LinksController, type: :controller do
         link = Link.create! valid_attributes
         delete :destroy, {:id => link.to_param}, valid_session
         expect(response).to redirect_to(links_url)
+      end
+
+      context "as a non-owner" do
+        it "responds with a 403" do
+          link = Link.create! valid_attributes
+          delete :destroy, {:id => link.to_param}, hacker_session
+          expect(response.status).to eq(403)
+          expect(response.body).to eq("403 Unauthorized")
+        end
       end
     end
 
