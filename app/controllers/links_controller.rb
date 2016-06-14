@@ -1,7 +1,7 @@
 class LinksController < ApplicationController
   before_action :set_link, only: [:show, :edit, :update, :destroy]
   before_action :require_login, except: :reroute
-  before_action :current_user_must_own_link, only: [:show, :edit]
+  before_action :current_user_must_own_link, only: [:show, :edit, :update, :destroy]
 
   def reroute
     link = Link.find_by(short_url: params[:wildcard])
