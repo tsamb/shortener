@@ -17,8 +17,9 @@ RSpec.describe LinksController, type: :controller do
 
       it "creates a new request record" do
         link = Link.create! valid_attributes
-        get :reroute, {wildcard: link.short_url}
-        expect(Request.last.link).to eq(link)
+        expect {
+          get :reroute, {wildcard: link.short_url}
+        }.to change(Request, :count).by(1)
       end
     end
 
