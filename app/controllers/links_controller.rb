@@ -12,7 +12,7 @@ class LinksController < ApplicationController
         path: request.path,
         link: link
         )
-      redirect_to link.full_url
+    redirect_to link.full_url
     else
       render plain: "404 Not Found", status: 404
     end

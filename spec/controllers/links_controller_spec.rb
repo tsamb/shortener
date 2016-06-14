@@ -7,6 +7,21 @@ RSpec.describe LinksController, type: :controller do
   let(:unowned_attributes) {{full_url: "http://www.linkedin.com", short_url: "li"}}
   let(:invalid_attributes) {{full_url: "not-a-url", short_url: ""}}
 
+  describe "GET #reroute" do
+    it "redirects to the full url that matches the short url" do
+      link = Link.create! valid_attributes
+      get :reroute, {wildcard: link.short_url}
+      expect(response).to redirect_to(link.full_url)
+    end
+
+    it "responds with a 404 when there is no short url match" do
+      link = Link.create! valid_attributes
+      get :reroute, {wildcard: "doesnoteexist"}
+      expect(response.status).to eq(404)
+      expect(response.body).to eq("404 Not Found")
+    end
+  end
+
   describe "GET #index" do
     it "assigns all the current user's links as @links" do
       link = Link.create! valid_attributes
