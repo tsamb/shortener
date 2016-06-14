@@ -8,17 +8,27 @@ RSpec.describe LinksController, type: :controller do
   let(:invalid_attributes) {{full_url: "not-a-url", short_url: ""}}
 
   describe "GET #reroute" do
-    it "redirects to the full url that matches the short url" do
-      link = Link.create! valid_attributes
-      get :reroute, {wildcard: link.short_url}
-      expect(response).to redirect_to(link.full_url)
+    context "when the short url exists" do
+      it "redirects to the full url that matches the short url" do
+        link = Link.create! valid_attributes
+        get :reroute, {wildcard: link.short_url}
+        expect(response).to redirect_to(link.full_url)
+      end
+
+      it "creates a new request record" do
+        link = Link.create! valid_attributes
+        get :reroute, {wildcard: link.short_url}
+        expect(Request.last.link).to eq(link)
+      end
     end
 
-    it "responds with a 404 when there is no short url match" do
-      link = Link.create! valid_attributes
-      get :reroute, {wildcard: "doesnoteexist"}
-      expect(response.status).to eq(404)
-      expect(response.body).to eq("404 Not Found")
+    context "when the short url does not exist" do
+      it "responds with a 404" do
+        link = Link.create! valid_attributes
+        get :reroute, {wildcard: "doesnoteexist"}
+        expect(response.status).to eq(404)
+        expect(response.body).to eq("404 Not Found")
+      end
     end
   end
 
