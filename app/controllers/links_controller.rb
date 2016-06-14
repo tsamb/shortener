@@ -34,14 +34,10 @@ class LinksController < ApplicationController
 
   def create
     @link = Link.new(link_params)
-
-    respond_to do |format|
       if @link.save
-        format.html { redirect_to @link, notice: 'Link was successfully created.' }
-        format.json { render :show, status: :created, location: @link }
+        redirect_to @link, notice: 'Link was successfully created.'
       else
-        format.html { render :new }
-        format.json { render json: @link.errors, status: :unprocessable_entity }
+        render :new
       end
     end
   end
