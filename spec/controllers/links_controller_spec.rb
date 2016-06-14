@@ -115,10 +115,27 @@ RSpec.describe LinksController, type: :controller do
 
   describe "GET #edit" do
     context "when logged in" do
-      it "assigns the requested link as @link" do
-        link = Link.create! valid_attributes
-        get :edit, {:id => link.to_param}, valid_session
-        expect(assigns(:link)).to eq(link)
+      context "as the owner" do
+        it "assigns the requested link as @link" do
+          link = Link.create! valid_attributes
+          get :edit, {:id => link.to_param}, valid_session
+          expect(assigns(:link)).to eq(link)
+        end
+
+        it "renders the edit template" do
+          link = Link.create! valid_attributes
+          get :edit, {:id => link.to_param}, valid_session
+          expect(response).to render_template("edit")
+        end
+      end
+
+      context "as a non-owner" do
+        it "responds with a 403" do
+          link = Link.create! valid_attributes
+          get :edit, {:id => link.to_param}, hacker_session
+          expect(response.status).to eq(403)
+          expect(response.body).to eq("403 Unauthorized")
+        end
       end
     end
 
