@@ -39,5 +39,15 @@ RSpec.describe "log in and out", type: :feature do
       click_button 'Login'
       expect(page).to have_content 'Wrong username or password.'
     end
+
+    it "displays a standard error even if the username exists" do
+      visit '/login'
+      within("form") do
+        fill_in 'Username', :with => 'sam'
+        fill_in 'Password', :with => 'wrongpassword'
+      end
+      click_button 'Login'
+      expect(page).to have_content 'Wrong username or password.'
+    end
   end
 end
