@@ -30,6 +30,14 @@ RSpec.describe "log in and out", type: :feature do
   end
 
   context "with invalid credentials" do
-
+    it "signs a user in" do
+      visit '/login'
+      within("form") do
+        fill_in 'Username', :with => 'hacker'
+        fill_in 'Password', :with => 'wrongpassword'
+      end
+      click_button 'Login'
+      expect(page).to have_content 'Wrong username or password.'
+    end
   end
 end
