@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe "log in and out", type: :feature do
+RSpec.feature "log in and out", type: :feature do
   before :each do
     User.create!(:username => 'sam', :password => 'password')
   end
 
   context "with valid credentials" do
-    it "signs a user in" do
+    scenario "User signs in" do
       visit '/login'
       within("form") do
         fill_in 'Username', :with => 'sam'
@@ -16,7 +16,7 @@ RSpec.describe "log in and out", type: :feature do
       expect(page).to have_content 'Successfully logged in.'
     end
 
-    it "logs a user out by visiting the logout url" do
+    scenario "User logs out" do
       visit '/login'
       within("form") do
         fill_in 'Username', :with => 'sam'
@@ -30,7 +30,7 @@ RSpec.describe "log in and out", type: :feature do
   end
 
   context "with invalid credentials" do
-    it "signs a user in" do
+    scenario "User signs in with nonexistent details" do
       visit '/login'
       within("form") do
         fill_in 'Username', :with => 'hacker'
@@ -40,7 +40,7 @@ RSpec.describe "log in and out", type: :feature do
       expect(page).to have_content 'Wrong username or password.'
     end
 
-    it "displays a standard error even if the username exists" do
+    scenario "User signs in with wrong password" do
       visit '/login'
       within("form") do
         fill_in 'Username', :with => 'sam'
