@@ -36,6 +36,17 @@ RSpec.describe Link, type: :model do
     end
   end
 
+  describe "#has_clicks?" do
+    it "returns true when the short link has been clicked" do
+      3.times { link.requests.create!(user_agent: "Mozilla/5.0", accept_language: "en-US", path: "/thegoog") }
+      expect(link.has_clicks?).to eq(true)
+    end
+
+    it "returns false when the short link has no clicks" do
+      expect(link.has_clicks?).to eq(false)
+    end
+  end
+
   describe "#user_agent_frequency" do
     it "returns a frequency hash of user agent counts" do
       2.times { link.requests.create!(user_agent: "Mozilla/5.0", accept_language: "en-US", path: "/thegoog") }
