@@ -4,6 +4,7 @@ RSpec.describe "log in and out", type: :feature do
   before :each do
     User.create!(:username => 'sam', :password => 'password')
   end
+
   context "with valid credentials" do
     it "signs a user in" do
       visit '/login'
@@ -14,9 +15,21 @@ RSpec.describe "log in and out", type: :feature do
       click_button 'Login'
       expect(page).to have_content 'Successfully logged in.'
     end
+
+    it "logs a user out by visiting the logout url" do
+      visit '/login'
+      within("form") do
+        fill_in 'Username', :with => 'sam'
+        fill_in 'Password', :with => 'password'
+      end
+      click_button 'Login'
+      expect(page).to have_content 'Successfully logged in.'
+      visit '/logout'
+      expect(page).to have_content 'Successfully logged out.'
+    end
   end
 
-  context "" do
-    
+  context "with invalid credentials" do
+
   end
 end

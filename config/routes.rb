@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :links
-  root 'links#index'
+  root 'splash#splash'
 
   resources :sessions, only: [:new, :create, :destroy]
   # match '/signup',  to: 'users#new',            via: 'get'
