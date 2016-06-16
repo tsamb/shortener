@@ -3,6 +3,7 @@ class Link < ActiveRecord::Base
   belongs_to :user
 
   validates :full_url, :short_url, presence: true
+  validates :full_url, exclusion: { in: ["http://"], message: "can't be blank" }
 
   def click_count
     requests.count
