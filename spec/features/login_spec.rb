@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "log in and out", type: :feature do
+RSpec.feature "FEATURE: Logging in and out", type: :feature do
   before :each do
     User.create!(:username => 'sam', :password => 'password')
   end
