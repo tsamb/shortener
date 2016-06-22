@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :full_url %><br>
-    <%= f.text_field :full_url, value: "http://" %>
+    <%= f.text_field :full_url, value: @link.full_url || "http://" %>
   </div>
   <div class="field">
     <%= f.label :short_url %><br>

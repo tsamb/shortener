@@ -19,16 +19,19 @@
 <%= link_to 'Back', links_path %>
 
 <h2>User Agents</h2>
-
-<table>
-	<tr>
-		<th>User agent string</th>
-    <th>Count</th>
-	</tr>
-  <% @link.user_agent_frequency.each do |user_agent, count| %>
-    <tr>
-      <td><%= user_agent %></td>
-      <td><%= count %></td>
-    </tr>
-  <% end %>
-</table>
+<% if @link.has_clicks? %>
+  <table>
+  	<tr>
+  		<th>User agent string</th>
+      <th>Count</th>
+  	</tr>
+    <% @link.user_agent_frequency.each do |user_agent, count| %>
+      <tr>
+        <td><%= user_agent %></td>
+        <td><%= count %></td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <p>User information will appear as soon as people have used the shortened link.</p>
+<% end %>
