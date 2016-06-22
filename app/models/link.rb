@@ -4,6 +4,7 @@ class Link < ActiveRecord::Base
 
   validates :full_url, :short_url, presence: true
   validates :full_url, exclusion: { in: ["http://"], message: "can't be blank" }
+  validates :short_url, uniqueness: true
 
   def click_count
     requests.count

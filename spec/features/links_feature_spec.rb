@@ -60,6 +60,19 @@ RSpec.feature "FEATURE: CRUDing links", type: :feature do
         expect(page).to_not have_content 'Link was successfully created.'
         expect(page).to have_content "Short url can't be blank"
       end
+
+      scenario "User creates a link with an already taken short url" do
+        Link.create!(full_url: 'http://maps.google.com', short_url: 'goog', user: user)
+        click_link 'New Link'
+        within('form') do
+          fill_in 'Short url', :with => 'goog'
+          fill_in 'Full url', :with => 'http://www.google.com'
+        end
+        click_button 'Create Link'
+
+        expect(page).to_not have_content 'Link was successfully created.'
+        expect(page).to have_content 'Short url has already been taken'
+      end
     end
   end
 

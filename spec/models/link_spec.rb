@@ -27,6 +27,12 @@ RSpec.describe Link, type: :model do
       link_no_short_url = Link.new(full_url: "http://www.google.com", short_url: "")
       expect(link_no_short_url).to be_invalid
     end
+
+    it "has a unique short_url" do
+      Link.create!(full_url: "http://www.google.com", short_url: "thegoog")
+      link_dup_short = Link.new(full_url: "http://maps.google.com", short_url: "thegoog")
+      expect(link_dup_short).to be_invalid
+    end
   end
 
   describe "#click_count" do
